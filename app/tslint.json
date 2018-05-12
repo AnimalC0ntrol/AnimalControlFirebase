@@ -5,5 +5,11 @@
       "config/**/*.js",
       "node_modules/**/*.ts"
     ]
+  },
+  "rules": {
+    "ordered-imports": false,
+    "member-access": false,
+    "jsx-boolean-value": false,
+    "no-console": false
   }
 }

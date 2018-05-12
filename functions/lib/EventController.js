@@ -1,7 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const admin = require("firebase-admin");
 exports.addEvent = (req, res) => {
     const event = req.body;
+    const db = admin.firestore();
+    console.log(event);
     if (!validFields(req.body)) {
         return res
             .status(400)
