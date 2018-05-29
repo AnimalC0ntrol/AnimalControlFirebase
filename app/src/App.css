@@ -6,8 +6,30 @@
 
 main {
   flex: 1;
+  display: flex;
+  border: 1px solid teal;
 }
 
 header {
-  background: #1B1C1D;
+  background: #1b1c1d;
+}
+
+footer {
+  background: #f9f9f9;
+  border-top: 1px solid #bbb;
+}
+
+#map-page {
+  display: flex;
+  flex: 1;
+}
+
+#device-list {
+  min-width: 300px;
+  padding: 15px;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
 }
