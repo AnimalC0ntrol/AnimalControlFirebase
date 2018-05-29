@@ -1,11 +1,11 @@
 import { IUnitDoc } from "../stores/services/UnitService";
-import * as moment from "moment";
 import { LatLngLiteral } from "leaflet";
+import { convertTimestamp } from "../util/Common";
 
 class UnitModel {
   unitId: number;
   position: LatLngLiteral;
-  lastUpdate: Date;
+  lastUpdate: string;
 
   constructor(unitData: IUnitDoc) {
     this.unitId = Number(unitData.unitId.replace("ffffffff0000", ""));
@@ -13,10 +13,7 @@ class UnitModel {
       lat: unitData.latlng.latitude,
       lng: unitData.latlng.longitude
     };
-    // @ts-ignore
-    this.lastUpdate = moment
-      .unix(unitData.lastUpdate.seconds)
-      .format("MMMM Do YYYY, h:mm:ss a");
+    this.lastUpdate = convertTimestamp(unitData.lastUpdate.seconds);
   }
 }
 

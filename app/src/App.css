@@ -33,3 +33,8 @@ footer {
   height: 100%;
   width: 100%;
 }
+
+.marker {
+  border: 1px solid red;
+  display: none;
+}

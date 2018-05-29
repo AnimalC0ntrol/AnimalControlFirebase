@@ -1,9 +1,10 @@
 import * as React from "react";
 import { RootStore } from "../stores/RootStore";
 import { inject, observer } from "mobx-react";
-import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import { Map, TileLayer } from "react-leaflet";
 import { RingLoader } from "react-spinners";
 import { Unit } from "../ui/Unit";
+import { UnitMarker } from "../ui/Marker";
 
 interface IProps {
   store: RootStore;
@@ -21,7 +22,7 @@ class Devices extends React.Component<IProps> {
 
   render() {
     const { isLoading, units, averageLocation } = this.props.store.unitStore;
-    const zoom = 6;
+    const zoom = 15;
 
     if (isLoading) {
       return <RingLoader />;
@@ -39,11 +40,7 @@ class Devices extends React.Component<IProps> {
               attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={averageLocation}>
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
-            </Marker>
+            {units.map(unit => <UnitMarker key={unit.unitId} unit={unit} />)}
           </Map>
         </div>
         <div id="device-list">
