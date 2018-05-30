@@ -1,7 +1,7 @@
 export interface IUnitDoc {
   batterylevel: number | null;
   lastUpdate: Date;
-  latlng: { latidute: number; longitude: number };
+  latlng: { latitude: number; longitude: number };
   signalStrength: number;
   unitId: string;
 }
@@ -13,7 +13,6 @@ export interface IEventDoc {
   timestamp: Date;
   unitId: string;
   uuid: string;
-  uvLevel: string | null;
 }
 
 export interface ITelenorEvent {
@@ -21,10 +20,9 @@ export interface ITelenorEvent {
   motion_timestamp: string;
   lat: string;
   lng: string;
-  uv: string | null;
-  center: string | null;
-  left: string | null;
-  right: string | null;
+  motion_center: string | null;
+  motion_left: string | null;
+  motion_right: string | null;
   tcxn: {
     cellular: {
       rssi: number;

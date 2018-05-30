@@ -15,7 +15,7 @@ interface IEvent {
   uv: number;
 }
 
-export const addEvent = (req: Request, res: Response) => {
+export const addEvent = async (req: Request, res: Response) => {
   const eventJson = req.body as ITelenorEvent;
   const db = admin.firestore();
 
@@ -29,35 +29,37 @@ export const addEvent = (req: Request, res: Response) => {
 
   const unitDoc: IUnitDoc = {
     unitId: eventJson.dev_eui,
-    batterylevel: undefined,
+    batterylevel: null,
     lastUpdate: new Date(eventJson.motion_timestamp),
     latlng: {
-      latidute: Number(eventJson.lat),
-      longitude: Number(eventJson.lng)
+      latitude: 69.681098,
+      longitude: 18.976624
     },
     signalStrength: eventJson.tcxn.cellular.rssi
   };
 
   const eventDoc: IEventDoc = {
     uuid: shortid.generate(),
-    centerPir: !!eventJson.center,
-    leftPir: !!eventJson.left,
-    rightPir: !!eventJson.right,
+    centerPir: eventJson.motion_center === "1" ? true : false,
+    leftPir: eventJson.motion_left === "1" ? true : false,
+    rightPir: eventJson.motion_right === "1" ? true : false,
     timestamp: new Date(eventJson.motion_timestamp),
-    unitId: eventJson.dev_eui,
-    uvLevel: eventJson.uv
+    unitId: eventJson.dev_eui
   };
 
-  console.log("# Computed:", unitDoc, eventDoc);
+  console.log("# Saving:", unitDoc.unitId, unitDoc);
 
-  db
-    .collection("units")
-    .doc(unitDoc.unitId)
-    .set(unitDoc)
-    .catch(error => {
-      console.error(error);
-      return res.status(503).json({ success: false, error });
-    });
+  try {
+    await db
+      .collection("units")
+      .doc(unitDoc.unitId)
+      .update(unitDoc);
+  } catch (error) {
+    console.error(error);
+    return res.status(503).json({ success: false, error });
+  }
+
+  console.log("# Saving", eventDoc);
 
   db
     .collection("events")

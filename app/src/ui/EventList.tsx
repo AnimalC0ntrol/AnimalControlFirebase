@@ -19,7 +19,7 @@ class EventList extends React.Component {
     const { eventStore } = this.injected.store;
     return (
       <div>
-        <Button compact color={"teal"} onClick={eventStore.clearEvents}>
+        <Button color={"teal"} onClick={eventStore.clearEvents}>
           Back
         </Button>
         {eventStore.events.map(event => (

@@ -21,6 +21,11 @@ class Devices extends React.Component<IProps> {
     props.store.unitStore.getUnits();
   }
 
+  componentWillUnmount() {
+    const { stopUnitListener } = this.props.store.unitStore;
+    stopUnitListener();
+  }
+
   render() {
     const { isLoading, units, averageLocation } = this.props.store.unitStore;
     const { events, isLoadingEvents } = this.props.store.eventStore;

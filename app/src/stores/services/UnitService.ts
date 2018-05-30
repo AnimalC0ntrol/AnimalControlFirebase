@@ -1,5 +1,6 @@
 import { loadFirestore } from "../../util/firestore";
 import { EventModel } from "../../models/EventModel";
+import { UnitModel } from "../../models/UnitModel";
 
 const firestore = loadFirestore();
 
@@ -22,9 +23,9 @@ export interface IUnitDoc {
 }
 
 export interface IEventDoc {
-  centerPir: string | null;
-  leftPir: string | null;
-  rightPir: string | null;
+  centerPir: boolean;
+  leftPir: boolean;
+  rightPir: boolean;
   timestamp: ITimeStamp;
   unitId: string;
   uuid: string;
@@ -44,10 +45,6 @@ export class UnitService {
     return units;
   };
 
-  static getUnitListener = async () => {
-    return firestore.collection("units");
-  };
-
   static getDeviceEvents = async (unitId: number) => {
     const events: EventModel[] = [];
 
@@ -63,6 +60,18 @@ export class UnitService {
     }
 
     return events;
+  };
+
+  static getUnitListener = (callback: (events: UnitModel[]) => void) => {
+    return firestore.collection("units").onSnapshot(querySnap => {
+      const units: UnitModel[] = [];
+      querySnap.forEach(snap => {
+        const unitDoc = snap.data() as IUnitDoc;
+        const unit = new UnitModel(unitDoc);
+        units.push(unit);
+      });
+      callback(units);
+    });
   };
 
   static getEventListener = (

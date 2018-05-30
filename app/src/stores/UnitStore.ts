@@ -5,18 +5,27 @@ import { UnitService } from "./services/UnitService";
 import { UnitModel } from "../models/UnitModel";
 
 export class UnitStore {
+  unitListener: any;
   @observable units: UnitModel[] = [];
   @observable isLoading: boolean;
+
+  constructor() {
+    setInterval(this.checkUnitState, 10000);
+  }
 
   @action
   getUnits = async () => {
     if (!this.units.length) {
       this.startLoading();
     }
-    const unitsData = await UnitService.getDevices();
-    const units = unitsData.map(unitData => new UnitModel(unitData));
-    this.units = units;
-    this.stopLoading();
+    this.unitListener = UnitService.getUnitListener(this.saveUnits);
+  };
+
+  @action
+  stopUnitListener = () => {
+    if (this.unitListener) {
+      this.unitListener();
+    }
   };
 
   @computed
@@ -42,6 +51,13 @@ export class UnitStore {
   }
 
   @action
+  private saveUnits = (units: UnitModel[]) => {
+    this.units = units;
+    this.checkUnitState();
+    this.stopLoading();
+  };
+
+  @action
   private startLoading = () => {
     this.isLoading = true;
   };
@@ -49,5 +65,19 @@ export class UnitStore {
   @action
   private stopLoading = () => {
     this.isLoading = false;
+  };
+
+  @action
+  private checkUnitState = () => {
+    const time = Date.now();
+
+    this.units.forEach(unit => {
+      const timeDelta = time / 1000 - unit.timestamp;
+      if (timeDelta < 30) {
+        unit.isInAlertState = true;
+      } else {
+        unit.isInAlertState = false;
+      }
+    });
   };
 }

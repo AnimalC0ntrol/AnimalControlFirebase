@@ -25,7 +25,7 @@ footer {
 }
 
 #device-list {
-  width: 300px;
+  width: 350px;
   padding: 15px;
   position: fixed;
   right: 0;
@@ -56,6 +56,74 @@ footer {
 .event {
   background: #fff;
   border-radius: 5px;
+  margin-top: 15px;
+  padding: 15px;
+}
+
+.event table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.event table td {
+  text-align: center;
+  font-weight: bold;
+}
+
+.event .event-time {
+  font-size: 0.9em;
+  font-weight: bold;
+  color: #bbb;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.unit-idle,
+.unit-alert {
+  background: #fff;
+  border-radius: 5px;
   margin-bottom: 15px;
   padding: 15px;
+}
+
+.unit-alert {
+  background: #ffc6c6;
+}
+
+.unit-id {
+  font-weight: bold;
+  font-size: 1.2em;
+  border-bottom: 1px solid #bbb;
+  margin-bottom: 5px;
+  padding-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.unit-data {
+  margin-bottom: 15px;
+}
+
+.unit-data table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.unit-data table tr td:first-child {
+  padding-right: 5px;
+  font-weight: bold;
+}
+
+.unit-data table tr {
+  border-bottom: 1px solid #bbb;
+}
+
+.unit-data table td {
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+
+.unit-actions {
+  display: flex;
+  justify-content: flex-end;
 }

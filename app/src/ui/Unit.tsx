@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, Icon, Button } from "semantic-ui-react";
+import { Icon, Button } from "semantic-ui-react";
 import { UnitModel } from "../models/UnitModel";
 import { observer, inject } from "mobx-react";
 import { RootStore } from "../stores/RootStore";
@@ -21,19 +21,47 @@ class Unit extends React.Component<IProps> {
   }
 
   render() {
-    const { readableId, lastUpdate } = this.props.data;
+    const {
+      readableId,
+      lastUpdate,
+      isInAlertState,
+      position
+    } = this.props.data;
     return (
-      <Card>
-        <Card.Content header={`ID: ${readableId}`} />
-        <Card.Content description={lastUpdate} />
-        <Button color="teal" onClick={this.getEvents}>
-          Show events
-        </Button>
-        <Card.Content extra>
-          <Icon name="user" />
-          Idle
-        </Card.Content>
-      </Card>
+      <div className={isInAlertState ? "unit-alert" : "unit-idle"}>
+        <div className="unit-id">
+          <span>{readableId}</span>
+          <Icon
+            name={isInAlertState ? "warning circle" : "check circle"}
+            color={isInAlertState ? "red" : "green"}
+          />
+        </div>
+        <div className="unit-data">
+          <table>
+            <tr>
+              <td>Last event</td>
+              <td>{lastUpdate}</td>
+            </tr>
+            <tr>
+              <td>Position</td>
+              <td>
+                {position.lat}, {position.lng}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div className="unit-actions">
+          <Button
+            icon
+            color="teal"
+            onClick={this.getEvents}
+            labelPosition="right"
+          >
+            Show events
+            <Icon name="list" />
+          </Button>
+        </div>
+      </div>
     );
   }
 

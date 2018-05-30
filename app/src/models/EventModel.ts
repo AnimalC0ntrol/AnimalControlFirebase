@@ -13,9 +13,10 @@ class EventModel {
   timestampSeconds: number;
 
   constructor(eventDoc: IEventDoc) {
-    this.centerPir = eventDoc.centerPir === "1" ? true : false;
-    this.leftPir = eventDoc.leftPir === "1" ? true : false;
-    this.rightPir = !!eventDoc.rightPir;
+    this.uuid = eventDoc.uuid;
+    this.centerPir = eventDoc.centerPir;
+    this.leftPir = eventDoc.leftPir;
+    this.rightPir = eventDoc.rightPir;
     this.timestamp = convertTimestamp(eventDoc.timestamp.seconds);
     this.timestampSeconds = eventDoc.timestamp.seconds;
     this.unitId = eventDoc.unitId;
