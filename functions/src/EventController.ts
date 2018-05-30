@@ -19,8 +19,6 @@ export const addEvent = async (req: Request, res: Response) => {
   const eventJson = req.body as ITelenorEvent;
   const db = admin.firestore();
 
-  console.log("# Event Json", eventJson);
-
   if (!validFields(req.body)) {
     return res
       .status(400)
@@ -47,40 +45,27 @@ export const addEvent = async (req: Request, res: Response) => {
     unitId: eventJson.dev_eui
   };
 
-  console.log("# Saving:", unitDoc.unitId, unitDoc);
-
   try {
     await db
       .collection("units")
       .doc(unitDoc.unitId)
       .update(unitDoc);
+    await db
+      .collection("events")
+      .doc(eventDoc.uuid)
+      .set(eventDoc);
   } catch (error) {
     console.error(error);
     return res.status(503).json({ success: false, error });
   }
 
-  console.log("# Saving", eventDoc);
+  console.log("# Event saved");
 
-  db
-    .collection("events")
-    .doc(eventDoc.uuid)
-    .set(eventDoc)
-    .catch(error => {
-      console.error(error);
-      return res.status(503).json({ success: false, error });
-    });
-
-  return res.status(200).json({ ok: "Works fine :)" });
+  return res.status(200).json({ success: true });
 };
 
 const validFields = body => {
-  const validPresentValues = [
-    "lat",
-    "lng",
-    "motion",
-    "motion_timestamp",
-    "dev_eui"
-  ];
+  const validPresentValues = ["lat", "lng", "center_motion", "dev_eui"];
 
   for (let value of validPresentValues) {
     if (!(value in body)) return false;
