@@ -29,6 +29,7 @@ export const addEvent = async (req: Request, res: Response) => {
     unitId: eventJson.dev_eui,
     batterylevel: null,
     lastUpdate: new Date(eventJson.motion_timestamp),
+    // Hard coded coords since our GPS device got fried :'(
     latlng: {
       latitude: 69.681098,
       longitude: 18.976624
