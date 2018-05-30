@@ -13,7 +13,6 @@ const admin = require("firebase-admin");
 exports.addEvent = (req, res) => __awaiter(this, void 0, void 0, function* () {
     const eventJson = req.body;
     const db = admin.firestore();
-    console.log("# Event Json", eventJson);
     if (!validFields(req.body)) {
         return res
             .status(400)
@@ -37,36 +36,25 @@ exports.addEvent = (req, res) => __awaiter(this, void 0, void 0, function* () {
         timestamp: new Date(eventJson.motion_timestamp),
         unitId: eventJson.dev_eui
     };
-    console.log("# Saving:", unitDoc.unitId, unitDoc);
     try {
         yield db
             .collection("units")
             .doc(unitDoc.unitId)
             .update(unitDoc);
+        yield db
+            .collection("events")
+            .doc(eventDoc.uuid)
+            .set(eventDoc);
     }
     catch (error) {
         console.error(error);
         return res.status(503).json({ success: false, error });
     }
-    console.log("# Saving", eventDoc);
-    db
-        .collection("events")
-        .doc(eventDoc.uuid)
-        .set(eventDoc)
-        .catch(error => {
-        console.error(error);
-        return res.status(503).json({ success: false, error });
-    });
-    return res.status(200).json({ ok: "Works fine :)" });
+    console.log("# Event saved");
+    return res.status(200).json({ success: true });
 });
 const validFields = body => {
-    const validPresentValues = [
-        "lat",
-        "lng",
-        "motion",
-        "motion_timestamp",
-        "dev_eui"
-    ];
+    const validPresentValues = ["lat", "lng", "center_motion", "dev_eui"];
     for (let value of validPresentValues) {
         if (!(value in body))
             return false;
