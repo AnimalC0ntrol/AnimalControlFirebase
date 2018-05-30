@@ -2,9 +2,10 @@ import * as React from "react";
 import { RootStore } from "../stores/RootStore";
 import { inject, observer } from "mobx-react";
 import { Map, TileLayer } from "react-leaflet";
-import { RingLoader } from "react-spinners";
-import { Unit } from "../ui/Unit";
+import { SyncLoader } from "react-spinners";
 import { UnitMarker } from "../ui/Marker";
+import { UnitList } from "../ui/UnitList";
+import { EventList } from "../ui/EventList";
 
 interface IProps {
   store: RootStore;
@@ -22,10 +23,16 @@ class Devices extends React.Component<IProps> {
 
   render() {
     const { isLoading, units, averageLocation } = this.props.store.unitStore;
+    const { events, isLoadingEvents } = this.props.store.eventStore;
+    const hasEvents = events.length > 0;
     const zoom = 15;
 
     if (isLoading) {
-      return <RingLoader />;
+      return (
+        <div id="loader">
+          <SyncLoader color={"rgba(252, 84, 0, 0.6)"} size={20} />
+        </div>
+      );
     }
 
     return (
@@ -44,7 +51,11 @@ class Devices extends React.Component<IProps> {
           </Map>
         </div>
         <div id="device-list">
-          {units.map(unit => <Unit key={unit.unitId} data={unit} />)}
+          {isLoadingEvents && (
+            <SyncLoader color={"rgba(252, 84, 0, 0.6)"} size={15} />
+          )}
+          {!isLoadingEvents && !hasEvents && <UnitList />}
+          {!isLoadingEvents && hasEvents && <EventList />}
         </div>
       </div>
     );

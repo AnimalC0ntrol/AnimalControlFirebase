@@ -44,16 +44,42 @@ export class UnitService {
     return units;
   };
 
-  static getDeviceEvents = async () => {
+  static getUnitListener = async () => {
+    return firestore.collection("units");
+  };
+
+  static getDeviceEvents = async (unitId: number) => {
     const events: EventModel[] = [];
 
-    const eventDocs = await firestore.collection("events").get();
+    try {
+      const eventDocs = await firestore.collection("events").get();
 
-    eventDocs.forEach(eventDoc => {
-      const event = eventDoc.data() as IEventDoc;
-      events.push(new EventModel(event));
-    });
+      eventDocs.forEach(eventDoc => {
+        const event = eventDoc.data() as IEventDoc;
+        events.push(new EventModel(event));
+      });
+    } catch (error) {
+      console.error(error);
+    }
 
     return events;
+  };
+
+  static getEventListener = (
+    unitId: string,
+    callback: (events: EventModel[]) => void
+  ) => {
+    return firestore
+      .collection("events")
+      .where("unitId", "==", unitId)
+      .onSnapshot(querySnap => {
+        const events: EventModel[] = [];
+        querySnap.forEach(snap => {
+          const eventDoc = snap.data() as IEventDoc;
+          const event = new EventModel(eventDoc);
+          events.push(event);
+        });
+        callback(events);
+      });
   };
 }

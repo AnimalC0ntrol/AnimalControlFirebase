@@ -1,60 +1,55 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const shortid = require("shortid");
 const admin = require("firebase-admin");
 exports.addEvent = (req, res) => {
-    const event = req.body;
+    const eventJson = req.body;
     const db = admin.firestore();
-    console.log(event);
+    console.log("# Event Json", eventJson);
     if (!validFields(req.body)) {
         return res
             .status(400)
             .json({ success: false, error: "Missing fields in body." });
     }
-    /*const uniqueId = shortid.generate();
-  
-    const unitData = {
-      unitId: event.dev_eui,
-      batterylevel: null,
-      latlng: {
-        latitude: event.lat,
-        longitude: event.lng
-      },
-      lastUpdate: current_timestamp,
-      signalStrength: event.tcxn.cellular.rssi
+    const unitDoc = {
+        unitId: eventJson.dev_eui,
+        batterylevel: undefined,
+        lastUpdate: new Date(eventJson.motion_timestamp),
+        latlng: {
+            latidute: Number(eventJson.lat),
+            longitude: Number(eventJson.lng)
+        },
+        signalStrength: eventJson.tcxn.cellular.rssi
     };
-  
-    const eventData = {
-      uuid: uniqueId,
-      unitId: event.dev_eui,
-      timestamp: current_timestamp,
-      leftPir: null,
-      centerPir: event.motion,
-      rightPir: null,
-      uvLevel: null
+    const eventDoc = {
+        uuid: shortid.generate(),
+        centerPir: !!eventJson.center,
+        leftPir: !!eventJson.left,
+        rightPir: !!eventJson.right,
+        timestamp: new Date(eventJson.motion_timestamp),
+        unitId: eventJson.dev_eui,
+        uvLevel: eventJson.uv
     };
-  
+    console.log("# Computed:", unitDoc, eventDoc);
     db
-      .collection("units")
-      .doc(event.dev_eui)
-      .set(unitData)
-      .catch(error => {
+        .collection("units")
+        .doc(unitDoc.unitId)
+        .set(unitDoc)
+        .catch(error => {
         console.error(error);
         return res.status(503).json({ success: false, error });
-      });
-  
+    });
     db
-      .collection("events")
-      .doc(epock)
-      .set(eventData)
-      .catch(error => {
+        .collection("events")
+        .doc(eventDoc.uuid)
+        .set(eventDoc)
+        .catch(error => {
         console.error(error);
         return res.status(503).json({ success: false, error });
-      });
-  
-    return res.status(201).json({ succes: true });*/
+    });
     return res.status(200).json({ ok: "Works fine :)" });
 };
-const validFields = (body) => {
+const validFields = body => {
     const validPresentValues = [
         "lat",
         "lng",

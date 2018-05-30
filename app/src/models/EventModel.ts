@@ -6,17 +6,21 @@ class EventModel {
   leftPir: boolean;
   rightPir: boolean;
   timestamp: string;
-  unitId: number;
+  unitId: string;
+  readableId: number;
   uuid: string;
   uvLevel?: string;
+  timestampSeconds: number;
 
   constructor(eventDoc: IEventDoc) {
-    this.centerPir = !!eventDoc.centerPir;
-    this.leftPir = !!eventDoc.leftPir;
+    this.centerPir = eventDoc.centerPir === "1" ? true : false;
+    this.leftPir = eventDoc.leftPir === "1" ? true : false;
     this.rightPir = !!eventDoc.rightPir;
     this.timestamp = convertTimestamp(eventDoc.timestamp.seconds);
-    this.unitId = Number(eventDoc.unitId);
+    this.timestampSeconds = eventDoc.timestamp.seconds;
+    this.unitId = eventDoc.unitId;
     this.uvLevel = eventDoc.uvLevel ? eventDoc.uvLevel : undefined;
+    this.readableId = Number(eventDoc.unitId.replace("ffffffff0000", ""));
   }
 }
 

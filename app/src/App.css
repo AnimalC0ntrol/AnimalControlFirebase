@@ -25,8 +25,14 @@ footer {
 }
 
 #device-list {
-  min-width: 300px;
+  width: 300px;
   padding: 15px;
+  position: fixed;
+  right: 0;
+  top: 45px;
+  bottom: 45px;
+  z-index: 999;
+  overflow-y: scroll;
 }
 
 .leaflet-container {
@@ -37,4 +43,19 @@ footer {
 .marker {
   border: 1px solid red;
   display: none;
+}
+
+#loader {
+  align-self: center;
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.event {
+  background: #fff;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  padding: 15px;
 }

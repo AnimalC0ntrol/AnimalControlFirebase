@@ -3,12 +3,14 @@ import { LatLngLiteral } from "leaflet";
 import { convertTimestamp } from "../util/Common";
 
 class UnitModel {
-  unitId: number;
+  unitId: string;
+  readableId: number;
   position: LatLngLiteral;
   lastUpdate: string;
 
   constructor(unitData: IUnitDoc) {
-    this.unitId = Number(unitData.unitId.replace("ffffffff0000", ""));
+    this.unitId = unitData.unitId;
+    this.readableId = Number(unitData.unitId.replace("ffffffff0000", ""));
     this.position = {
       lat: unitData.latlng.latitude,
       lng: unitData.latlng.longitude
