@@ -7,7 +7,6 @@
 main {
   flex: 1;
   display: flex;
-  border: 1px solid teal;
 }
 
 header {
@@ -52,9 +51,9 @@ header nav ul li {
 footer {
   background: #1b1c1d;
   height: 60px;
-  display: flex;
-  align-content: center;
+  padding: 15px;
   color: #fff;
+  text-align: center;
 }
 
 #map-page {
@@ -176,4 +175,37 @@ footer {
   font-size: 0.75em;
   font-weight: 400;
   margin-right: 10px;
+}
+
+#jumbo {
+  background: #1b1c1d;
+  min-height: 50vh;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+  color: #fff;
+  background: url("/jumbo-bg.jpg");
+  background-size: cover;
+  flex-direction: column;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #bbb;
+}
+
+#jumbo div {
+  margin: 0 auto;
+  background: rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#jumbo div p {
+  font-size: 1.2em;
+}
+
+#homepage {
+  width: 100%;
+  margin-bottom: 30px;
 }

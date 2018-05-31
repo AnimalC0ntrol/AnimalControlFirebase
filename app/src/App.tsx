@@ -63,7 +63,7 @@ class App extends React.Component {
                   {sessionStore.user && (
                     <li>
                       <Link to="/devices">
-                        <Button inverted color="violet">
+                        <Button inverted color="yellow">
                           Your devices
                         </Button>
                       </Link>
@@ -71,21 +71,21 @@ class App extends React.Component {
                   )}
                   {!sessionStore.user && (
                     <li>
-                      <Button inverted color="violet">
+                      <Button inverted color="yellow">
                         <Link to="/createuser">Sign up</Link>
                       </Button>
                     </li>
                   )}
                   {!sessionStore.user && (
                     <li>
-                      <Button inverted color="violet">
+                      <Button inverted color="yellow">
                         <Link to="/signin">Sign inn</Link>
                       </Button>
                     </li>
                   )}
                   {sessionStore.user && (
                     <li>
-                      <Button inverted color="violet">
+                      <Button inverted color="yellow">
                         {sessionStore.user.email}
                       </Button>
                     </li>
