@@ -22,7 +22,7 @@ export const addEvent = async (req: Request, res: Response) => {
 
   const pos = {
     latitude: Number(eventJson.lat) < 90 ? Number(eventJson.lat) : 69.676392,
-    longitude: Number(eventJson.lat) < 90 ? Number(eventJson.lat) : 19.003542
+    longitude: Number(eventJson.lat) < 90 ? Number(eventJson.lng) : 19.003542
   };
 
   const unitDoc: IUnitDoc = {

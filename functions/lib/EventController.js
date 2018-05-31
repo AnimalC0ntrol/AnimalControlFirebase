@@ -14,15 +14,16 @@ exports.addEvent = (req, res) => __awaiter(this, void 0, void 0, function* () {
     const DATABASE = admin.firestore();
     const eventJson = req.body;
     console.log("#Payload | ", eventJson);
+    const pos = {
+        latitude: Number(eventJson.lat) < 90 ? Number(eventJson.lat) : 69.676392,
+        longitude: Number(eventJson.lat) < 90 ? Number(eventJson.lng) : 19.003542
+    };
     const unitDoc = {
         unitId: eventJson.dev_eui,
         batterylevel: null,
         lastUpdate: new Date(eventJson.motion_timestamp),
         // Hard coded coords since our GPS device got fried :'(
-        latlng: {
-            latitude: 69.681098,
-            longitude: 18.976624
-        },
+        latlng: pos,
         signalStrength: eventJson.tcxn.cellular.rssi
     };
     const eventDoc = {

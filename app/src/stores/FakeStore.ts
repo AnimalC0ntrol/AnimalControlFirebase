@@ -89,7 +89,6 @@ class FakeStore {
     });
 
     await batch.commit();
-    console.log("Removed simulated unit");
   };
 }
 

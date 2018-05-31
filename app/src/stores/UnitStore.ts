@@ -40,8 +40,6 @@ export class UnitStore {
         longitude: unit.position.lng
       }));
 
-      console.log("Positions", postions);
-
       const geolibCenter = geolib.getCenter(postions);
 
       center = {
