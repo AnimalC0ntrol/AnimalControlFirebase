@@ -32,6 +32,8 @@ class Devices extends React.Component<IProps> {
     const hasEvents = events.length > 0;
     const zoom = 15;
 
+    console.log("Avg loc", averageLocation);
+
     if (isLoading) {
       return (
         <div id="loader">

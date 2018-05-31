@@ -10,9 +10,10 @@ import { Devices } from "./pages/Devices";
 import { Page404 } from "./pages/Page404";
 import { RootStore } from "./stores/RootStore";
 import { CreateUser } from "./pages/CreateUser";
-import { Menu, Container } from "semantic-ui-react";
 import { Footer } from "./ui/Footer";
 import { SignIn } from "./pages/SignIn";
+import { Button } from "semantic-ui-react";
+import { Simulator } from "./pages/Simulator";
 
 @observer
 class App extends React.Component {
@@ -52,33 +53,45 @@ class App extends React.Component {
         <Router>
           <div id="page">
             <header>
-              <Menu inverted>
-                <Container>
-                  <Menu.Item header>
-                    <Link to="/">AnimalControl</Link>
-                  </Menu.Item>
-
-                  <Menu.Item header>
-                    <Link to="/devices">Your devices</Link>
-                  </Menu.Item>
-
-                  {!sessionStore.user && (
-                    <Menu.Item header>
-                      <Link to="/createuser">Sign up</Link>
-                    </Menu.Item>
-                  )}
-
-                  {!sessionStore.user && (
-                    <Menu.Item header>
-                      <Link to="/signin">Sign inn</Link>
-                    </Menu.Item>
-                  )}
-
+              <h1>
+                <Link to="/">
+                  <img src="logo.png" />
+                </Link>
+              </h1>
+              <nav>
+                <ul>
                   {sessionStore.user && (
-                    <Menu.Item header>{sessionStore.user.email}</Menu.Item>
+                    <li>
+                      <Link to="/devices">
+                        <Button inverted color="violet">
+                          Your devices
+                        </Button>
+                      </Link>
+                    </li>
                   )}
-                </Container>
-              </Menu>
+                  {!sessionStore.user && (
+                    <li>
+                      <Button inverted color="violet">
+                        <Link to="/createuser">Sign up</Link>
+                      </Button>
+                    </li>
+                  )}
+                  {!sessionStore.user && (
+                    <li>
+                      <Button inverted color="violet">
+                        <Link to="/signin">Sign inn</Link>
+                      </Button>
+                    </li>
+                  )}
+                  {sessionStore.user && (
+                    <li>
+                      <Button inverted color="violet">
+                        {sessionStore.user.email}
+                      </Button>
+                    </li>
+                  )}
+                </ul>
+              </nav>
             </header>
 
             <main>
@@ -87,6 +100,7 @@ class App extends React.Component {
                 <Route path="/devices" component={Devices} />
                 <Route path="/createuser" component={CreateUser} />
                 <Route path="/signin" component={SignIn} />
+                <Route path="/simulator" component={Simulator} />
                 <Route component={Page404} />
               </Switch>
             </main>

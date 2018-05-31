@@ -3,6 +3,7 @@ import { Icon, Button } from "semantic-ui-react";
 import { UnitModel } from "../models/UnitModel";
 import { observer, inject } from "mobx-react";
 import { RootStore } from "../stores/RootStore";
+import { BlinkingIcon } from "./BlinkingIcon";
 
 interface IProps {
   data: UnitModel;
@@ -28,13 +29,11 @@ class Unit extends React.Component<IProps> {
       position
     } = this.props.data;
     return (
-      <div className={isInAlertState ? "unit-alert" : "unit-idle"}>
+      <div className={"unit-idle"}>
         <div className="unit-id">
           <span>{readableId}</span>
-          <Icon
-            name={isInAlertState ? "warning circle" : "check circle"}
-            color={isInAlertState ? "red" : "green"}
-          />
+          {isInAlertState && <BlinkingIcon />}
+          {!isInAlertState && <Icon name={"check circle"} color={"green"} />}
         </div>
         <div className="unit-data">
           <table>
