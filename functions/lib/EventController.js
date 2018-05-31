@@ -11,17 +11,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const shortid = require("shortid");
 const admin = require("firebase-admin");
 exports.addEvent = (req, res) => __awaiter(this, void 0, void 0, function* () {
+    const DATABASE = admin.firestore();
     const eventJson = req.body;
-    const db = admin.firestore();
-    if (!validFields(req.body)) {
-        return res
-            .status(400)
-            .json({ success: false, error: "Missing fields in body." });
-    }
+    console.log("#Payload | ", eventJson);
     const unitDoc = {
         unitId: eventJson.dev_eui,
         batterylevel: null,
         lastUpdate: new Date(eventJson.motion_timestamp),
+        // Hard coded coords since our GPS device got fried :'(
         latlng: {
             latitude: 69.681098,
             longitude: 18.976624
@@ -37,28 +34,51 @@ exports.addEvent = (req, res) => __awaiter(this, void 0, void 0, function* () {
         unitId: eventJson.dev_eui
     };
     try {
-        yield db
-            .collection("units")
-            .doc(unitDoc.unitId)
-            .update(unitDoc);
-        yield db
-            .collection("events")
-            .doc(eventDoc.uuid)
-            .set(eventDoc);
+        const exists = yield checkIfDeviceExists(unitDoc.unitId);
+        if (exists) {
+            yield updateDevice(unitDoc);
+        }
+        else {
+            yield createDevice(unitDoc);
+        }
+        yield createEvent(eventDoc);
     }
     catch (error) {
         console.error(error);
         return res.status(503).json({ success: false, error });
     }
-    console.log("# Event saved");
+    console.log("# Event saved | ", eventDoc.uuid);
     return res.status(200).json({ success: true });
 });
-const validFields = body => {
-    const validPresentValues = ["lat", "lng", "center_motion", "dev_eui"];
-    for (let value of validPresentValues) {
-        if (!(value in body))
-            return false;
+const createEvent = (event) => __awaiter(this, void 0, void 0, function* () {
+    const DATABASE = admin.firestore();
+    yield DATABASE.collection("events")
+        .doc(event.uuid)
+        .set(event);
+});
+const checkIfDeviceExists = (unitId) => __awaiter(this, void 0, void 0, function* () {
+    const DATABASE = admin.firestore();
+    try {
+        const result = yield DATABASE.collection("units")
+            .doc(unitId)
+            .get();
+        return result.exists;
     }
-    return true;
-};
+    catch (error) {
+        console.error("# ERROR | checkIfDeviceExists | ", error);
+        return false;
+    }
+});
+const createDevice = (unitDoc) => __awaiter(this, void 0, void 0, function* () {
+    const DATABASE = admin.firestore();
+    yield DATABASE.collection("units")
+        .doc(unitDoc.unitId)
+        .set(unitDoc);
+});
+const updateDevice = (unitDoc) => __awaiter(this, void 0, void 0, function* () {
+    const DATABASE = admin.firestore();
+    yield DATABASE.collection("units")
+        .doc(unitDoc.unitId)
+        .update(unitDoc);
+});
 //# sourceMappingURL=EventController.js.map

@@ -16,24 +16,21 @@ interface IEvent {
 }
 
 export const addEvent = async (req: Request, res: Response) => {
+  const DATABASE = admin.firestore();
   const eventJson = req.body as ITelenorEvent;
-  const db = admin.firestore();
+  console.log("#Payload | ", eventJson);
 
-  if (!validFields(req.body)) {
-    return res
-      .status(400)
-      .json({ success: false, error: "Missing fields in body." });
-  }
+  const pos = {
+    latitude: Number(eventJson.lat) < 90 ? Number(eventJson.lat) : 69.676392,
+    longitude: Number(eventJson.lat) < 90 ? Number(eventJson.lat) : 19.003542
+  };
 
   const unitDoc: IUnitDoc = {
     unitId: eventJson.dev_eui,
     batterylevel: null,
     lastUpdate: new Date(eventJson.motion_timestamp),
     // Hard coded coords since our GPS device got fried :'(
-    latlng: {
-      latitude: 69.681098,
-      longitude: 18.976624
-    },
+    latlng: pos,
     signalStrength: eventJson.tcxn.cellular.rssi
   };
 
@@ -47,30 +44,53 @@ export const addEvent = async (req: Request, res: Response) => {
   };
 
   try {
-    await db
-      .collection("units")
-      .doc(unitDoc.unitId)
-      .update(unitDoc);
-    await db
-      .collection("events")
-      .doc(eventDoc.uuid)
-      .set(eventDoc);
+    const exists = await checkIfDeviceExists(unitDoc.unitId);
+    if (exists) {
+      await updateDevice(unitDoc);
+    } else {
+      await createDevice(unitDoc);
+    }
+    await createEvent(eventDoc);
   } catch (error) {
     console.error(error);
     return res.status(503).json({ success: false, error });
   }
 
-  console.log("# Event saved");
+  console.log("# Event saved | ", eventDoc.uuid);
 
   return res.status(200).json({ success: true });
 };
 
-const validFields = body => {
-  const validPresentValues = ["lat", "lng", "center_motion", "dev_eui"];
+const createEvent = async (event: IEventDoc) => {
+  const DATABASE = admin.firestore();
+  await DATABASE.collection("events")
+    .doc(event.uuid)
+    .set(event);
+};
 
-  for (let value of validPresentValues) {
-    if (!(value in body)) return false;
+const checkIfDeviceExists = async unitId => {
+  const DATABASE = admin.firestore();
+  try {
+    const result = await DATABASE.collection("units")
+      .doc(unitId)
+      .get();
+    return result.exists;
+  } catch (error) {
+    console.error("# ERROR | checkIfDeviceExists | ", error);
+    return false;
   }
+};
 
-  return true;
+const createDevice = async (unitDoc: IUnitDoc) => {
+  const DATABASE = admin.firestore();
+  await DATABASE.collection("units")
+    .doc(unitDoc.unitId)
+    .set(unitDoc);
+};
+
+const updateDevice = async (unitDoc: IUnitDoc) => {
+  const DATABASE = admin.firestore();
+  await DATABASE.collection("units")
+    .doc(unitDoc.unitId)
+    .update(unitDoc);
 };
