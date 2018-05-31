@@ -37,16 +37,18 @@ class Unit extends React.Component<IProps> {
         </div>
         <div className="unit-data">
           <table>
-            <tr>
-              <td>Last event</td>
-              <td>{lastUpdate}</td>
-            </tr>
-            <tr>
-              <td>Position</td>
-              <td>
-                {position.lat}, {position.lng}
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>Last event</td>
+                <td>{lastUpdate}</td>
+              </tr>
+              <tr>
+                <td>Position</td>
+                <td>
+                  {position.lat}, {position.lng}
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
         <div className="unit-actions">

@@ -16,31 +16,35 @@ class Event extends React.Component<IProps> {
       <div className="event">
         <div className="event-time">{timestamp}</div>
         <table>
-          <tr>
-            <td>Left PIR</td>
-            <td>Center PIR</td>
-            <td>Right PIR</td>
-          </tr>
-          <tr>
-            <td>
-              <Icon
-                name={leftPir ? "remove circle" : "circle"}
-                color={leftPir ? "red" : "grey"}
-              />
-            </td>
-            <td>
-              <Icon
-                name={centerPir ? "remove circle" : "circle"}
-                color={centerPir ? "red" : "grey"}
-              />
-            </td>
-            <td>
-              <Icon
-                name={rightPir ? "remove circle" : "circle"}
-                color={rightPir ? "red" : "grey"}
-              />
-            </td>
-          </tr>
+          <thead>
+            <tr>
+              <td>Left PIR</td>
+              <td>Center PIR</td>
+              <td>Right PIR</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <Icon
+                  name={leftPir ? "remove circle" : "circle"}
+                  color={leftPir ? "red" : "grey"}
+                />
+              </td>
+              <td>
+                <Icon
+                  name={centerPir ? "remove circle" : "circle"}
+                  color={centerPir ? "red" : "grey"}
+                />
+              </td>
+              <td>
+                <Icon
+                  name={rightPir ? "remove circle" : "circle"}
+                  color={rightPir ? "red" : "grey"}
+                />
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     );
