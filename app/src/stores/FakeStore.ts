@@ -26,7 +26,7 @@ export enum PirLocation {
 }
 
 const API_URL =
-  "http://us-central1-animalcontrol-58410.cloudfunctions.net/api/event";
+  "https://us-central1-animalcontrol-58410.cloudfunctions.net/api/event";
 
 class FakeStore {
   @action
